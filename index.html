@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Feliz Cumpleaños</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      overflow: hidden;
+      font-family: "Segoe UI", Arial, sans-serif;
+      text-align: center;
+      color: white;
+      background:
+        radial-gradient(circle at 20% 10%, rgba(255,255,255,0.35), transparent 25%),
+        radial-gradient(circle at 80% 15%, rgba(255,216,255,0.25), transparent 30%),
+        linear-gradient(135deg, #19002e 0%, #57247d 45%, #ff4fa3 100%);
+    }
+
+    .fondo {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background-image:
+        radial-gradient(circle, rgba(255,255,255,0.9) 1px, transparent 1.5px),
+        radial-gradient(circle, rgba(255,255,255,0.5) 1px, transparent 1.5px);
+      background-size: 55px 55px, 95px 95px;
+      background-position: 0 0, 30px 20px;
+      opacity: 0.45;
+      animation: moverFondo 18s linear infinite;
+    }
+
+    .confeti {
+      position: fixed;
+      top: -40px;
+      font-size: 26px;
+      z-index: 2;
+      animation: caer 8s linear infinite;
+      pointer-events: none;
+    }
+
+    .inicio {
+      position: fixed;
+      inset: 0;
+      z-index: 30;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background:
+        radial-gradient(circle at top, rgba(255,255,255,0.25), transparent 35%),
+        linear-gradient(135deg, #22003d, #7a2ca3, #ff5ca8);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .inicio.ocultar {
+      opacity: 0;
+      transform: scale(1.05);
+      pointer-events: none;
+    }
+
+    .caja-inicio,
+    .tarjeta {
+      width: 100%;
+      max-width: 530px;
+      padding: 34px 24px;
+      border-radius: 36px;
+      background: rgba(255, 255, 255, 0.16);
+      border: 1px solid rgba(255, 255, 255, 0.36);
+      backdrop-filter: blur(18px);
+      box-shadow:
+        0 30px 85px rgba(0,0,0,0.45),
+        inset 0 0 28px rgba(255,255,255,0.12);
+    }
+
+    .caja-inicio h1 {
+      margin: 0 0 14px;
+      font-size: 38px;
+      text-shadow: 0 4px 18px rgba(0,0,0,0.4);
+    }
+
+    .caja-inicio p {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.6;
+      color: #ffe6f3;
+    }
+
+    button {
+      margin-top: 25px;
+      padding: 16px 36px;
+      border: none;
+      border-radius: 40px;
+      background: linear-gradient(135deg, #ffffff, #ffd6ec);
+      color: #b41464;
+      font-size: 18px;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 16px 35px rgba(0,0,0,0.35);
+      transition: 0.3s;
+    }
+
+    button:hover {
+      transform: translateY(-3px) scale(1.04);
+      box-shadow: 0 20px 45px rgba(0,0,0,0.45);
+    }
+
+    .contenido {
+      min-height: 100vh;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      position: relative;
+      z-index: 10;
+      animation: aparecer 1s ease forwards;
+    }
+
+    .tarjeta {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tarjeta::before {
+      content: "";
+      position: absolute;
+      inset: -80px;
+      z-index: -1;
+      background:
+        radial-gradient(circle at 20% 10%, rgba(255,255,255,0.22), transparent 24%),
+        radial-gradient(circle at 80% 5%, rgba(255,220,245,0.28), transparent 30%),
+        radial-gradient(circle at 50% 100%, rgba(255,255,255,0.13), transparent 36%);
+    }
+
+    h2 {
+      margin: 0 0 6px;
+      font-size: 36px;
+      color: #fff5fb;
+      text-shadow: 0 4px 16px rgba(0,0,0,0.45);
+    }
+
+    .subtitulo {
+      margin: 0 0 12px;
+      color: #ffe0f1;
+      font-size: 16px;
+    }
+
+    .escena-torta {
+      width: 360px;
+      height: 330px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .vela {
+      position: absolute;
+      top: 20px;
+      width: 34px;
+      height: 105px;
+      border-radius: 10px;
+      cursor: pointer;
+      z-index: 8;
+      background:
+        repeating-linear-gradient(
+          45deg,
+          #ffffff 0 8px,
+          #ff5ca8 8px 16px
+        );
+      box-shadow: inset 0 0 8px rgba(0,0,0,0.15);
+      transition: transform 0.25s ease, opacity 0.3s ease;
+    }
+
+    .vela:hover {
+      transform: translateY(-4px) scale(1.05);
+    }
+
+    .vela.uno {
+      left: 110px;
+    }
+
+    .vela.dos {
+      left: 163px;
+    }
+
+    .vela.tres {
+      left: 216px;
+    }
+
+    .vela.apagada {
+      background:
+        repeating-linear-gradient(
+          45deg,
+          #f1f5f9 0 8px,
+          #94a3b8 8px 16px
+        );
+      opacity: 0.75;
+    }
+
+    .llama {
+      position: absolute;
+      left: 6px;
+      top: -35px;
+      width: 22px;
+      height: 34px;
+      border-radius: 50% 50% 50% 50%;
+      background:
+        radial-gradient(circle at 50% 65%, #fff8a6 0 20%, #ffb703 35%, #ff5c00 70%);
+      box-shadow:
+        0 0 18px rgba(255, 183, 3, 0.95),
+        0 0 35px rgba(255, 92, 0, 0.55);
+      animation: llama 0.45s infinite alternate ease-in-out;
+    }
+
+    .vela.apagada .llama {
+      display: none;
+    }
+
+    .humo {
+      display: none;
+      position: absolute;
+      left: 5px;
+      top: -38px;
+      font-size: 24px;
+      opacity: 0.8;
+      animation: humo 1.4s ease forwards;
+    }
+
+    .vela.apagada .humo {
+      display: block;
+    }
+
+    .torta {
+      position: absolute;
+      left: 45px;
+      bottom: 30px;
+      width: 270px;
+      height: 150px;
+      border-radius: 30px 30px 22px 22px;
+      background: linear-gradient(180deg, #ffb3d9 0%, #ff66b3 45%, #d63384 100%);
+      box-shadow:
+        0 24px 30px rgba(0,0,0,0.28),
+        inset 0 12px 16px rgba(255,255,255,0.25);
+      z-index: 5;
+    }
+
+    .crema {
+      position: absolute;
+      left: 0;
+      top: -18px;
+      width: 270px;
+      height: 45px;
+      background: #fff8fc;
+      border-radius: 30px 30px 18px 18px;
+      box-shadow: inset 0 -8px 10px rgba(255,190,220,0.35);
+    }
+
+    .crema::before {
+      content: "";
+      position: absolute;
+      left: 18px;
+      top: 24px;
+      width: 28px;
+      height: 35px;
+      background: #fff8fc;
+      border-radius: 0 0 18px 18px;
+      box-shadow:
+        48px 2px 0 #fff8fc,
+        100px -4px 0 #fff8fc,
+        152px 3px 0 #fff8fc,
+        205px -2px 0 #fff8fc;
+    }
+
+    .decoracion {
+      position: absolute;
+      top: 68px;
+      left: 28px;
+      font-size: 24px;
+      letter-spacing: 16px;
+      z-index: 6;
+    }
+
+    .base {
+      position: absolute;
+      left: 25px;
+      bottom: 8px;
+      width: 310px;
+      height: 35px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.25);
+      z-index: 4;
+      filter: blur(1px);
+    }
+
+    .mensaje-box {
+      min-height: 92px;
+      margin: 8px auto 8px;
+      padding: 16px;
+      max-width: 430px;
+      border-radius: 24px;
+      background: rgba(255,255,255,0.17);
+      border: 1px solid rgba(255,255,255,0.30);
+      box-shadow: inset 0 0 20px rgba(255,255,255,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff3fa;
+      font-size: 18px;
+      line-height: 1.45;
+      font-weight: 800;
+      text-shadow: 0 3px 12px rgba(0,0,0,0.38);
+      animation: suave 0.4s ease;
+    }
+
+    .contador {
+      font-size: 13px;
+      color: #ffd8ec;
+      opacity: 0.95;
+    }
+
+    .nota {
+      margin-top: 10px;
+      color: #ffd8ec;
+      opacity: 0.85;
+      font-size: 13px;
+    }
+
+    .flotante {
+      position: fixed;
+      bottom: -60px;
+      z-index: 3;
+      font-size: 30px;
+      animation: subir 9s linear infinite;
+      opacity: 0.86;
+      pointer-events: none;
+    }
+
+    #player {
+      display: none;
+    }
+
+    @keyframes aparecer {
+      from { opacity: 0; transform: translateY(18px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes suave {
+      from { opacity: 0; transform: translateY(8px) scale(0.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes llama {
+      from { transform: scale(1) rotate(-4deg); }
+      to { transform: scale(1.12) rotate(4deg); }
+    }
+
+    @keyframes humo {
+      from { transform: translateY(0); opacity: 0.9; }
+      to { transform: translateY(-25px); opacity: 0; }
+    }
+
+    @keyframes caer {
+      0% { transform: translateY(-10vh) rotate(0deg); opacity: 0; }
+      15% { opacity: 1; }
+      100% { transform: translateY(115vh) rotate(360deg); opacity: 0; }
+    }
+
+    @keyframes subir {
+      0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+      15% { opacity: 1; }
+      100% { transform: translateY(-115vh) rotate(360deg); opacity: 0; }
+    }
+
+    @keyframes moverFondo {
+      from { background-position: 0 0, 30px 20px; }
+      to { background-position: 120px 120px, 180px 140px; }
+    }
+
+    @media (max-width: 480px) {
+      .caja-inicio,
+      .tarjeta {
+        max-width: 94vw;
+        padding: 28px 16px;
+      }
+
+      h2,
+      .caja-inicio h1 {
+        font-size: 30px;
+      }
+
+      .escena-torta {
+        transform: scale(0.9);
+        margin-top: -10px;
+        margin-bottom: -25px;
+      }
+
+      .mensaje-box {
+        font-size: 16px;
+        min-height: 82px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="fondo"></div>
+
+  <div class="confeti" style="left: 8%; animation-delay: 0s;">🎉</div>
+  <div class="confeti" style="left: 20%; animation-delay: 2s;">🎈</div>
+  <div class="confeti" style="left: 36%; animation-delay: 4s;">✨</div>
+  <div class="confeti" style="left: 52%; animation-delay: 1s;">🎊</div>
+  <div class="confeti" style="left: 68%; animation-delay: 3s;">💖</div>
+  <div class="confeti" style="left: 84%; animation-delay: 5s;">🎉</div>
+
+  <div class="inicio" id="inicio">
+    <div class="caja-inicio">
+      <h1 id="tituloInicio"></h1>
+      <p id="mensajeInicio"></p>
+      <button onclick="abrirRegalo()" id="textoBoton"></button>
+    </div>
+  </div>
+
+  <main class="contenido" id="contenido">
+    <section class="tarjeta">
+      <h2 id="tituloPrincipal"></h2>
+      <p class="subtitulo" id="subtituloPrincipal"></p>
+
+      <div class="escena-torta">
+        <div class="vela uno" onclick="apagarVela(0, this)">
+          <div class="llama"></div>
+          <div class="humo">💨</div>
+        </div>
+
+        <div class="vela dos" onclick="apagarVela(1, this)">
+          <div class="llama"></div>
+          <div class="humo">💨</div>
+        </div>
+
+        <div class="vela tres" onclick="apagarVela(2, this)">
+          <div class="llama"></div>
+          <div class="humo">💨</div>
+        </div>
+
+        <div class="base"></div>
+
+        <div class="torta">
+          <div class="crema"></div>
+          <div class="decoracion">🍓🍒🍓</div>
+        </div>
+      </div>
+
+      <div class="mensaje-box" id="mensajeBox"></div>
+      <div class="contador" id="contador"></div>
+      <p class="nota" id="notaMusica"></p>
+
+      <div id="player"></div>
+    </section>
+  </main>
+
+  <div class="flotante" style="left: 12%; animation-delay: 0s;">🎂</div>
+  <div class="flotante" style="left: 28%; animation-delay: 2s;">🎈</div>
+  <div class="flotante" style="left: 46%; animation-delay: 4s;">🎉</div>
+  <div class="flotante" style="left: 65%; animation-delay: 1s;">💖</div>
+  <div class="flotante" style="left: 82%; animation-delay: 3s;">✨</div>
+
+  <script>
+    /*
+      =====================================================
+      EDITA SOLO ESTA PARTE
+      Aquí puedes cambiar títulos, mensajes y textos.
+      =====================================================
+    */
+
+    const CONFIGURACION_DEL_REGALO = {
+      tituloPestana: "Feliz Cumpleaños",
+
+      tituloInicio: "🎂 Tengo una sorpresa para ti 🎂",
+      mensajeInicio: "Hay una torta con tres velas encendidas. Abre tu regalo y toca cada vela para descubrir un mensaje especial.",
+      textoBoton: "Abrir regalo",
+
+      tituloPrincipal: "🎉 ¡Feliz cumpleaños! 🎉",
+      subtituloPrincipal: "Toca cada vela para apagarla y abrir un mensaje",
+
+      mensajeAntesDeTocar: "Toca una vela encendida para descubrir tu primer mensaje 🎂",
+      textoContador: "Velas encendidas:",
+      notaMusica: "La música de cumpleaños comienza después de tocar “Abrir regalo”.",
+
+      mensajeFinal: "Las tres velas se apagaron, pero el deseo queda encendido: que tengas un cumpleaños lleno de alegría, amor y momentos inolvidables 🎂✨",
+      contadorFinal: "Todas las velas fueron apagadas 🎉",
+
+      mensajesVelas: [
+        "Primera vela: que este nuevo año de vida venga lleno de alegría, salud y sueños cumplidos 🎈",
+        "Segunda vela: que nunca te falten motivos para sonreír y personas que te quieran bonito 💖",
+        "Tercera vela: que todos tus deseos se acerquen poco a poco y que hoy seas muy feliz 🎂✨"
+      ]
+    };
+
+    /*
+      =====================================================
+      DESDE AQUÍ YA NO NECESITAS MODIFICAR NADA
+      =====================================================
+    */
+
+    let velasEncendidas = CONFIGURACION_DEL_REGALO.mensajesVelas.length;
+    let musicaIniciada = false;
+    let audioContext;
+    let intervaloMusica;
+
+    document.title = CONFIGURACION_DEL_REGALO.tituloPestana;
+
+    document.getElementById("tituloInicio").innerHTML = CONFIGURACION_DEL_REGALO.tituloInicio;
+    document.getElementById("mensajeInicio").innerHTML = CONFIGURACION_DEL_REGALO.mensajeInicio;
+    document.getElementById("textoBoton").innerHTML = CONFIGURACION_DEL_REGALO.textoBoton;
+
+    document.getElementById("tituloPrincipal").innerHTML = CONFIGURACION_DEL_REGALO.tituloPrincipal;
+    document.getElementById("subtituloPrincipal").innerHTML = CONFIGURACION_DEL_REGALO.subtituloPrincipal;
+    document.getElementById("mensajeBox").innerHTML = CONFIGURACION_DEL_REGALO.mensajeAntesDeTocar;
+    document.getElementById("notaMusica").innerHTML = CONFIGURACION_DEL_REGALO.notaMusica;
+
+    actualizarContador();
+
+    function abrirRegalo() {
+      const inicio = document.getElementById("inicio");
+      const contenido = document.getElementById("contenido");
+
+      inicio.classList.add("ocultar");
+
+      setTimeout(() => {
+        inicio.style.display = "none";
+        contenido.style.display = "flex";
+      }, 700);
+
+      iniciarMusicaCumpleanos();
+    }
+
+    function apagarVela(numero, vela) {
+      const caja = document.getElementById("mensajeBox");
+
+      if (vela.classList.contains("apagada")) {
+        return;
+      }
+
+      vela.classList.add("apagada");
+      velasEncendidas--;
+
+      caja.style.animation = "none";
+      void caja.offsetWidth;
+      caja.style.animation = "suave 0.4s ease";
+
+      caja.innerHTML = CONFIGURACION_DEL_REGALO.mensajesVelas[numero];
+
+      actualizarContador();
+
+      if (velasEncendidas === 0) {
+        setTimeout(() => {
+          caja.innerHTML = CONFIGURACION_DEL_REGALO.mensajeFinal;
+          document.getElementById("contador").innerHTML = CONFIGURACION_DEL_REGALO.contadorFinal;
+        }, 700);
+      }
+    }
+
+    function actualizarContador() {
+      document.getElementById("contador").innerHTML =
+        CONFIGURACION_DEL_REGALO.textoContador + " " + velasEncendidas;
+    }
+
+    function iniciarMusicaCumpleanos() {
+      if (musicaIniciada) return;
+      musicaIniciada = true;
+
+      audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+      tocarMelodiaCumpleanos();
+
+      intervaloMusica = setInterval(() => {
+        tocarMelodiaCumpleanos();
+      }, 14500);
+    }
+
+    function tocarNota(frecuencia, inicio, duracion) {
+      const oscilador = audioContext.createOscillator();
+      const ganancia = audioContext.createGain();
+
+      oscilador.type = "sine";
+      oscilador.frequency.value = frecuencia;
+
+      ganancia.gain.setValueAtTime(0.0001, audioContext.currentTime + inicio);
+      ganancia.gain.exponentialRampToValueAtTime(0.18, audioContext.currentTime + inicio + 0.02);
+      ganancia.gain.exponentialRampToValueAtTime(0.0001, audioContext.currentTime + inicio + duracion);
+
+      oscilador.connect(ganancia);
+      ganancia.connect(audioContext.destination);
+
+      oscilador.start(audioContext.currentTime + inicio);
+      oscilador.stop(audioContext.currentTime + inicio + duracion + 0.05);
+    }
+
+    function tocarMelodiaCumpleanos() {
+      /*
+        Melodía estilo "Cumpleaños feliz" generada con tonos.
+        No depende de YouTube ni de archivos externos.
+      */
+
+      const C4 = 261.63;
+      const D4 = 293.66;
+      const E4 = 329.63;
+      const F4 = 349.23;
+      const G4 = 392.00;
+      const A4 = 440.00;
+      const Bb4 = 466.16;
+      const C5 = 523.25;
+
+      const melodia = [
+        [C4, 0.00, 0.35], [C4, 0.38, 0.22], [D4, 0.72, 0.55], [C4, 1.30, 0.55], [F4, 1.88, 0.55], [E4, 2.46, 0.85],
+        [C4, 3.50, 0.35], [C4, 3.88, 0.22], [D4, 4.22, 0.55], [C4, 4.80, 0.55], [G4, 5.38, 0.55], [F4, 5.96, 0.85],
+        [C4, 7.00, 0.35], [C4, 7.38, 0.22], [C5, 7.72, 0.55], [A4, 8.30, 0.55], [F4, 8.88, 0.55], [E4, 9.46, 0.55], [D4, 10.04, 0.85],
+        [Bb4, 11.00, 0.35], [Bb4, 11.38, 0.22], [A4, 11.72, 0.55], [F4, 12.30, 0.55], [G4, 12.88, 0.55], [F4, 13.46, 0.95]
+      ];
+
+      melodia.forEach(nota => {
+        tocarNota(nota[0], nota[1], nota[2]);
+      });
+    }
+  </script>
+
+</body>
+</html>
