@@ -571,18 +571,23 @@
         CONFIGURACION_DEL_REGALO.textoContador + " " + velasEncendidas;
     }
 
-    function iniciarMusicaCumpleanos() {
-      if (musicaIniciada) return;
-      musicaIniciada = true;
+function iniciarMusicaCumpleanos() {
+  if (musicaIniciada) return;
+  musicaIniciada = true;
 
-      audioContext = new (window.AudioContext || window.webkitAudioContext)();
+  const videoID = "AQUI_PONES_EL_ID_DE_YOUTUBE";
 
-      tocarMelodiaCumpleanos();
-
-      intervaloMusica = setInterval(() => {
-        tocarMelodiaCumpleanos();
-      }, 14500);
-    }
+  document.getElementById("player").innerHTML = `
+    <iframe
+      width="1"
+      height="1"
+      src="https://www.youtube.com/embed/${videoID}?autoplay=1&loop=1&playlist=${videoID}"
+      title="Música de cumpleaños"
+      frameborder="0"
+      allow="autoplay; encrypted-media">
+    </iframe>
+  `;
+}
 
     function tocarNota(frecuencia, inicio, duracion) {
       const oscilador = audioContext.createOscillator();
